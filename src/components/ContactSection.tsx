@@ -81,7 +81,7 @@ const ContactSection = () => {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Based In</p>
-                <p className="font-medium">United States</p>
+                <p className="font-medium">New Jersey Bloomingdale, USA</p>
               </div>
             </div>
 
