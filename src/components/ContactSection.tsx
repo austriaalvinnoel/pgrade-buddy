@@ -1,3 +1,22 @@
+return (
+  <section>
+
+    {/* 👇 hidden form (add this) */}
+    <form name="contact" method="POST" data-netlify="true" hidden>
+      <input name="name" />
+      <input name="email" />
+      <input name="subject" />
+      <textarea name="message"></textarea>
+    </form>
+
+    {/* 👇 your real form (already exists) */}
+    <motion.form ...>
+      ...
+    </motion.form>
+
+  </section>
+);
+
 <motion.form
   name="contact"
   method="POST"
