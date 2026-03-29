@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useRef, useState } from "react";
-import { Send } from "lucide-react";
+import { Send, Mail, Phone, MapPin } from "lucide-react";
 
 const ContactSection = () => {
   const ref = useRef(null);
@@ -29,6 +29,7 @@ const ContactSection = () => {
 
       <div className="container mx-auto px-6 grid lg:grid-cols-2 gap-12">
 
+        {/* LEFT SIDE */}
         <div>
           <h2 className="text-4xl font-bold mb-6">
             Let's Create Something Special
@@ -38,8 +39,56 @@ const ContactSection = () => {
             Whether you're planning a corporate event or private party,
             we'd love to hear from you.
           </p>
+
+          <div className="space-y-6">
+
+            {/* Email */}
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 flex items-center justify-center bg-primary/10 rounded-lg">
+                <Mail size={20} />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Email</p>
+                <a
+                  href="mailto:therealjohnnywatson@gmail.com"
+                  className="font-medium hover:text-primary transition-colors"
+                >
+                  therealjohnnywatson@gmail.com
+                </a>
+              </div>
+            </div>
+
+            {/* Phone */}
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 flex items-center justify-center bg-primary/10 rounded-lg">
+                <Phone size={20} />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Phone</p>
+                <a
+                  href="tel:9736193091"
+                  className="font-medium hover:text-primary transition-colors"
+                >
+                  973-619-3091
+                </a>
+              </div>
+            </div>
+
+            {/* Location */}
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 flex items-center justify-center bg-primary/10 rounded-lg">
+                <MapPin size={20} />
+              </div>
+              <div>
+                <p className="text-sm text-muted-foreground">Based In</p>
+                <p className="font-medium">United States</p>
+              </div>
+            </div>
+
+          </div>
         </div>
 
+        {/* RIGHT SIDE (FORM) */}
         <motion.form
           name="contact"
           method="POST"
