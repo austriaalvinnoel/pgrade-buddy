@@ -23,10 +23,10 @@ const ShowsSection = () => {
     const fetchShows = async () => {
       try {
         const res = await axios.get(
-          "https://www.googleapis.com/calendar/v3/calendars/YOUR_CALENDAR_ID/events",
+          "https://www.googleapis.com/calendar/v3/calendars/alvinnoel@gmail.com/events",
           {
             params: {
-              key: "YOUR_API_KEY",
+              key: "AIzaSyAtcsM53mC29a_R5IUlAktq-Tg_GwusClI",
               singleEvents: true,
               orderBy: "startTime",
               timeMin: new Date().toISOString(),
