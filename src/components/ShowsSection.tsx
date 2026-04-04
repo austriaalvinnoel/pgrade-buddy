@@ -23,7 +23,7 @@ const ShowsSection = () => {
     const fetchShows = async () => {
       try {
         const res = await fetch(
-          `https://www.googleapis.com/calendar/v3/calendars/austriaalvinnoel%40gmail.com/events?key=AIzaSyAtcsM53mC29a_R5IUlAktq-Tg_GwusClI&singleEvents=true&orderBy=startTime&timeMin=2020-01-01T00:00:00Z`
+          `https://www.googleapis.com/calendar/v3/calendars/austriaalvinnoel%40gmail.com/events?key=AIzaSyAtcsM53mC29a_R5IUlAktq-Tg_GwusClI&singleEvents=true&orderBy=startTime&timeMin=${new Date().toISOString()}`
         );
 
         const data = await res.json();
