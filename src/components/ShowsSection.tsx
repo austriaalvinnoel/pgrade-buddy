@@ -1,45 +1,77 @@
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import { MapPin, Calendar, Clock, ArrowRight } from "lucide-react";
+import axios from "axios";
 
-const upcomingShows = [
-  {
-    id: 1,
-    venue: "The Comedy Store",
-    city: "Los Angeles, CA",
-    date: "Feb 15, 2026",
-    time: "8:00 PM",
-    status: "available",
-  },
-  {
-    id: 2,
-    venue: "Gotham Comedy Club",
-    city: "New York, NY",
-    date: "Feb 22, 2026",
-    time: "9:00 PM",
-    status: "limited",
-  },
-  {
-    id: 3,
-    venue: "Zanies Comedy Club",
-    city: "Chicago, IL",
-    date: "Mar 8, 2026",
-    time: "7:30 PM",
-    status: "available",
-  },
-  {
-    id: 4,
-    venue: "Helium Comedy Club",
-    city: "Philadelphia, PA",
-    date: "Mar 15, 2026",
-    time: "8:00 PM",
-    status: "soldout",
-  },
-];
+type ShowType = {
+  id: string;
+  venue: string;
+  city: string;
+  date: string;
+  time: string;
+  status: string;
+  ticket: string;
+};
 
 const ShowsSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  const [shows, setShows] = useState<ShowType[]>([]);
+
+  useEffect(() => {
+    const fetchShows = async () => {
+      try {
+        const res = await axios.get(
+          "https://www.googleapis.com/calendar/v3/calendars/YOUR_CALENDAR_ID/events",
+          {
+            params: {
+              key: "YOUR_API_KEY",
+              singleEvents: true,
+              orderBy: "startTime",
+              timeMin: new Date().toISOString(),
+            },
+          }
+        );
+
+        const formatted = res.data.items.map((event: any) => {
+          const dateObj = new Date(
+            event.start.dateTime || event.start.date
+          );
+
+          const desc = event.description || "";
+
+          const status = desc.includes("soldout")
+            ? "soldout"
+            : desc.includes("limited")
+            ? "limited"
+            : "available";
+
+          const ticketMatch = desc.match(/ticket:(.*)/);
+          const ticket = ticketMatch ? ticketMatch[1].trim() : "#";
+
+          return {
+            id: event.id,
+            venue: event.summary,
+            city: event.location || "TBA",
+            date: dateObj.toLocaleDateString(),
+            time: dateObj.toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            }),
+            status,
+            ticket,
+          };
+        });
+
+        setShows(formatted);
+      } catch (error) {
+        console.error("Error fetching events:", error);
+      }
+    };
+
+    fetchShows();
+  }, []);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -87,7 +119,7 @@ const ShowsSection = () => {
         </motion.div>
 
         <div className="space-y-4 max-w-4xl mx-auto">
-          {upcomingShows.map((show, index) => (
+          {shows.map((show, index) => (
             <motion.div
               key={show.id}
               initial={{ opacity: 0, y: 20 }}
@@ -117,11 +149,16 @@ const ShowsSection = () => {
 
               <div className="flex items-center gap-4">
                 {getStatusBadge(show.status)}
+
                 {show.status !== "soldout" ? (
-                  <button className="btn-outline-gold text-sm py-2 px-4 rounded group-hover:bg-primary group-hover:text-primary-foreground">
+                  <a
+                    href={show.ticket}
+                    target="_blank"
+                    className="btn-outline-gold text-sm py-2 px-4 rounded group-hover:bg-primary group-hover:text-primary-foreground"
+                  >
                     Get Tickets
                     <ArrowRight size={14} className="inline ml-2" />
-                  </button>
+                  </a>
                 ) : (
                   <button
                     disabled
