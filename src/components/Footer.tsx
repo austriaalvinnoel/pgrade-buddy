@@ -3,9 +3,9 @@ import { Youtube, Instagram, Twitter, Facebook } from "lucide-react";
 
 const socialLinks = [
   { icon: Youtube, href: "https://www.youtube.com/user/WatsonnWatson", label: "YouTube" },
-  { icon: Instagram, href: "#", label: "Instagram" },
-  { icon: Twitter, href: "#", label: "Twitter" },
-  { icon: Facebook, href: "#", label: "Facebook" },
+  { icon: Instagram, href: "https://www.instagram.com/johnnywatsoncomedy/", label: "Instagram" },
+  { icon: Twitter, href: "https://x.com/comedianwatson", label: "Twitter" },
+  { icon: Facebook, href: "https://www.facebook.com/goodcomic", label: "Facebook" },
 ];
 
 const Footer = () => {
@@ -13,7 +13,6 @@ const Footer = () => {
     <footer className="py-12 border-t border-border">
       <div className="container mx-auto px-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-          {/* Logo */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -28,7 +27,6 @@ const Footer = () => {
             </p>
           </motion.div>
 
-          {/* Social Links */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -37,7 +35,7 @@ const Footer = () => {
             className="flex items-center gap-4"
           >
             {socialLinks.map((social) => (
-              <a
+              
                 key={social.label}
                 href={social.href}
                 target="_blank"
@@ -50,7 +48,6 @@ const Footer = () => {
             ))}
           </motion.div>
 
-          {/* Copyright */}
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
