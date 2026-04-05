@@ -39,6 +39,8 @@ const VideosSection = () => {
     loadVideos();
   }, []);
 
+  const youtubeUrl = "https://www.youtube.com/user/WatsonnWatson";
+
   return (
     <section id="videos" className="py-24 md:py-32 relative bg-secondary/30">
       <div className="container mx-auto px-6" ref={ref}>
@@ -87,4 +89,41 @@ const VideosSection = () => {
                     />
                     <div className="absolute inset-0 bg-background/50 group-hover:bg-background/30 transition-colors duration-300" />
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center shadow-lg group
+                      <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center shadow-lg group-hover:scale-110 transition-all duration-300">
+                        <Play size={24} className="text-primary-foreground ml-1" />
+                      </div>
+                    </div>
+                    <div className="absolute bottom-3 right-3 px-2 py-1 bg-background/90 rounded text-xs font-medium">
+                      {video.duration}
+                    </div>
+                  </div>
+                )}
+              </div>
+              <h3 className="font-display text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
+                {video.title}
+              </h3>
+              <p className="text-sm text-muted-foreground mt-1">{video.views}</p>
+            </motion.div>
+          ))}
+        </div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={isInView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.6, delay: 0.8 }}
+          className="text-center mt-12"
+        >
+          <button
+            onClick={() => window.open(youtubeUrl, "_blank")}
+            className="btn-outline-gold rounded-sm inline-flex items-center gap-2"
+          >
+            <ExternalLink size={16} />
+            Visit YouTube Channel
+          </button>
+        </motion.div>
+      </div>
+    </section>
+  );
+};
+
+export default VideosSection;
