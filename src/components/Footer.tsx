@@ -5,7 +5,7 @@ const socialLinks = [
   { icon: Youtube, href: "https://www.youtube.com/user/WatsonnWatson", label: "YouTube" },
   { icon: Instagram, href: "https://www.instagram.com/johnnywatsoncomedy/", label: "Instagram" },
   { icon: Twitter, href: "https://x.com/comedianwatson", label: "Twitter" },
-  { icon: Facebook, href: "https://www.facebook.com/goodcomic", label: "Facebook" },
+  { icon: Facebook, href: "https://www.facebook.com/johnnywatson11", label: "Facebook" },
 ];
 
 const Footer = () => {
