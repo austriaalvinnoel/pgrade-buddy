@@ -2,7 +2,7 @@ backend:
   name: github
   repo: austriaalvinnoel/pgrade-buddy
   branch: main
-  auth_endpoint: https://api.netlify.com/auth
+  auth_endpoint: https://api.netlify.com
 
 media_folder: "public/images"
 public_folder: "/images"
