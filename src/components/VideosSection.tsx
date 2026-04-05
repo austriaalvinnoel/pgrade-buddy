@@ -87,43 +87,4 @@ const VideosSection = () => {
                     />
                     <div className="absolute inset-0 bg-background/50 group-hover:bg-background/30 transition-colors duration-300" />
                     <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center shadow-lg group-hover:shadow-[0_0_30px_rgba(234,179,8,0.5)] group-hover:scale-110 transition-all duration-300">
-                        <Play size={24} className="text-primary-foreground ml-1" />
-                      </div>
-                    </div>
-                    <div className="absolute bottom-3 right-3 px-2 py-1 bg-background/90 rounded text-xs font-medium">
-                      {video.duration}
-                    </div>
-                  </div>
-                )}
-              </div>
-              <h3 className="font-display text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
-                {video.title}
-              </h3>
-              <p className="text-sm text-muted-foreground mt-1">{video.views}</p>
-            </motion.div>
-          ))}
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="text-center mt-12"
-        >
-          
-            href="https://www.youtube.com/user/WatsonnWatson"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-outline-gold rounded-sm inline-flex items-center gap-2"
-          >
-            <ExternalLink size={16} />
-            Visit YouTube Channel
-          </a>
-        </motion.div>
-      </div>
-    </section>
-  );
-};
-
-export default VideosSection;
+                      <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center shadow-lg group
