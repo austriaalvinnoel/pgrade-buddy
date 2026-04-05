@@ -20,6 +20,7 @@ collections:
     label: "Upcoming Shows"
     folder: "src/content/shows"
     create: true
+    format: json
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
       - { label: "Venue", name: "title", widget: "string" }
@@ -32,6 +33,7 @@ collections:
     label: "Videos"
     folder: "src/content/videos"
     create: true
+    format: json
     slug: "{{slug}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
@@ -45,6 +47,7 @@ collections:
     label: "Testimonials"
     folder: "src/content/testimonials"
     create: true
+    format: json
     slug: "{{slug}}"
     fields:
       - { label: "Quote", name: "quote", widget: "text" }
