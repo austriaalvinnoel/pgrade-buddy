@@ -19,14 +19,30 @@ const VideosSection = () => {
   useEffect(() => {
     const loadVideos = async () => {
       try {
-        const modules = import.meta.glob("../content/videos/*.json");
+        const modules = import.meta.glob("../content/videos/*.md", { as: "raw" });
+        const entries = Object.entries(modules);
+        if (entries.length === 0) throw new Error("no md files");
         const loaded = await Promise.all(
-          Object.entries(modules).map(async ([, mod], index) => {
-            const data = (await mod()) as any;
-            return { ...data.default, id: index + 1 };
+          entries.map(async ([, mod], index) => {
+            const raw = (await mod()) as string;
+            const lines = raw.split("\n");
+            const data: Record<string, string> = {};
+            lines.forEach(line => {
+              const match = line.match(/^(\w+):\s*(.+)$/);
+              if (match) data[match[1]] = match[2].trim();
+            });
+            return {
+              id: index + 1,
+              title: data.title || "",
+              youtubeId: data.youtubeId || "",
+              duration: data.duration || "",
+              views: data.views || "",
+            };
           })
         );
-        setVideos(loaded);
+        const filtered = loaded.filter(v => v.youtubeId);
+        if (filtered.length === 0) throw new Error("no valid videos");
+        setVideos(filtered);
       } catch (e) {
         console.error("Failed to load videos:", e);
         setVideos([
@@ -42,88 +58,4 @@ const VideosSection = () => {
   const youtubeUrl = "https://www.youtube.com/user/WatsonnWatson";
 
   return (
-    <section id="videos" className="py-24 md:py-32 relative bg-secondary/30">
-      <div className="container mx-auto px-6" ref={ref}>
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
-        >
-          <h2 className="font-display text-4xl md:text-5xl font-bold mb-4">
-            Watch <span className="text-gradient-gold">Johnny</span> Live
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Can't make it to a show? Get a taste of the comedy from the comfort of your home.
-          </p>
-        </motion.div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {videos.map((video, index) => (
-            <motion.div
-              key={video.id}
-              initial={{ opacity: 0, y: 30 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.2 + index * 0.15 }}
-              className="group"
-            >
-              <div className="relative aspect-video rounded-lg overflow-hidden mb-4">
-                {playingVideo === video.id ? (
-                  <iframe
-                    src={`https://www.youtube.com/embed/${video.youtubeId}?autoplay=1&rel=0`}
-                    title={video.title}
-                    className="w-full h-full"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                ) : (
-                  <div
-                    className="relative w-full h-full cursor-pointer"
-                    onClick={() => setPlayingVideo(video.id)}
-                  >
-                    <img
-                      src={`https://img.youtube.com/vi/${video.youtubeId}/hqdefault.jpg`}
-                      alt={video.title}
-                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-background/50 group-hover:bg-background/30 transition-colors duration-300" />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center shadow-lg group-hover:scale-110 transition-all duration-300">
-                        <Play size={24} className="text-primary-foreground ml-1" />
-                      </div>
-                    </div>
-                    <div className="absolute bottom-3 right-3 px-2 py-1 bg-background/90 rounded text-xs font-medium">
-                      {video.duration}
-                    </div>
-                  </div>
-                )}
-              </div>
-              <h3 className="font-display text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
-                {video.title}
-              </h3>
-              <p className="text-sm text-muted-foreground mt-1">{video.views}</p>
-            </motion.div>
-          ))}
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={isInView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.6, delay: 0.8 }}
-          className="text-center mt-12"
-        >
-          <button
-            onClick={() => window.open(youtubeUrl, "_blank")}
-            className="btn-outline-gold rounded-sm inline-flex items-center gap-2"
-          >
-            <ExternalLink size={16} />
-            Visit YouTube Channel
-          </button>
-        </motion.div>
-      </div>
-    </section>
-  );
-};
-
-export default VideosSection;
+    <section id="videos" className="py-24 md:py-32
