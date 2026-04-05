@@ -35,16 +35,14 @@ const Footer = () => {
             className="flex items-center gap-4"
           >
             {socialLinks.map((social) => (
-              
+              <button
                 key={social.label}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
+                onClick={() => window.open(social.href, "_blank")}
                 className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all duration-300"
                 aria-label={social.label}
               >
                 <social.icon size={18} />
-              </a>
+              </button>
             ))}
           </motion.div>
 
