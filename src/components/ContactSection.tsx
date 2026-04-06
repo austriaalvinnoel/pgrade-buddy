@@ -158,60 +158,69 @@ const ContactSection = () => {
             ) : (
               <form onSubmit={handleSubmit} className="card-theatrical p-8 space-y-5">
 
-                {/* SPAM PROTECTION */}
-                <input type="checkbox" name="botcheck" className="hidden" />
+  <input type="checkbox" name="botcheck" className="hidden" />
 
-                <input
-                  type="text"
-                  placeholder="Your Name"
-                  required
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
-                />
+  <div className="grid sm:grid-cols-2 gap-5">
+    <input
+      type="text"
+      placeholder="Your Name"
+      required
+      value={formData.name}
+      onChange={(e) =>
+        setFormData({ ...formData, name: e.target.value })
+      }
+      className="w-full px-4 py-3 bg-secondary border border-border rounded-lg focus:border-primary focus:outline-none text-sm"
+    />
 
-                <input
-                  type="email"
-                  placeholder="Email Address"
-                  required
-                  value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                />
+    <input
+      type="email"
+      placeholder="Email Address"
+      required
+      value={formData.email}
+      onChange={(e) =>
+        setFormData({ ...formData, email: e.target.value })
+      }
+      className="w-full px-4 py-3 bg-secondary border border-border rounded-lg focus:border-primary focus:outline-none text-sm"
+    />
+  </div>
 
-                <input
-                  type="text"
-                  placeholder="Corporate Event, Private Party, etc."
-                  required
-                  value={formData.subject}
-                  onChange={(e) =>
-                    setFormData({ ...formData, subject: e.target.value })
-                  }
-                />
+  <input
+    type="text"
+    placeholder="Corporate Event, Private Party, etc."
+    required
+    value={formData.subject}
+    onChange={(e) =>
+      setFormData({ ...formData, subject: e.target.value })
+    }
+    className="w-full px-4 py-3 bg-secondary border border-border rounded-lg focus:border-primary focus:outline-none text-sm"
+  />
 
-                <textarea
-                  placeholder="Date, location, audience size, and any special requests"
-                  rows={5}
-                  required
-                  value={formData.message}
-                  onChange={(e) =>
-                    setFormData({ ...formData, message: e.target.value })
-                  }
-                />
+  <textarea
+    placeholder="Date, location, audience size, and any special requests"
+    rows={5}
+    required
+    value={formData.message}
+    onChange={(e) =>
+      setFormData({ ...formData, message: e.target.value })
+    }
+    className="w-full px-4 py-3 bg-secondary border border-border rounded-lg focus:border-primary focus:outline-none resize-none text-sm"
+  />
 
-                {error && (
-                  <p className="text-red-500 text-sm text-center">
-                    Something went wrong. Please try again.
-                  </p>
-                )}
+  {error && (
+    <p className="text-red-400 text-sm text-center">
+      Something went wrong. Please try again.
+    </p>
+  )}
 
-                <button type="submit" disabled={submitting}>
-                  <Send size={16} />
-                  {submitting ? "Sending..." : "Send Booking Inquiry"}
-                </button>
-              </form>
+  <button
+    type="submit"
+    disabled={submitting}
+    className="btn-gold rounded-sm w-full"
+  >
+    {submitting ? "Sending..." : "Send Booking Inquiry"}
+  </button>
+
+</form>
             )}
           </motion.div>
         </div>
