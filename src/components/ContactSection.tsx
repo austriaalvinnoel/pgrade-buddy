@@ -3,6 +3,8 @@ import { useRef, useState } from "react";
 import { Send, Mail, Phone, MapPin, CheckCircle, Calendar, Users } from "lucide-react";
 import contactData from "../content/contact.json";
 
+const WEB3FORMS_KEY = "4c4f0343-dd53-4037-93e2-942ee699458e";
+
 const ContactSection = () => {
   const ref = useRef(null);
   const [formData, setFormData] = useState({
@@ -17,14 +19,19 @@ const ContactSection = () => {
     setSubmitting(true);
     setError(false);
     try {
-      const form = e.currentTarget;
-      const data = new FormData(form);
-      const response = await fetch("/", {
+      const response = await fetch("https://api.web3forms.com/submit", {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams(data as any).toString(),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_KEY,
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+        }),
       });
-      if (response.ok) {
+      const data = await response.json();
+      if (data.success) {
         setSubmitted(true);
         setFormData({ name: "", email: "", subject: "", message: "" });
       } else {
@@ -39,13 +46,6 @@ const ContactSection = () => {
 
   return (
     <section id="contact" className="py-24 md:py-32 relative">
-      <form name="contact" method="POST" data-netlify="true" hidden>
-        <input name="name" />
-        <input name="email" />
-        <input name="subject" />
-        <textarea name="message"></textarea>
-      </form>
-
       <div className="container mx-auto px-6">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -64,8 +64,6 @@ const ContactSection = () => {
         </motion.div>
 
         <div className="grid lg:grid-cols-5 gap-12 max-w-6xl mx-auto">
-
-          {/* LEFT SIDE */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -114,7 +112,6 @@ const ContactSection = () => {
               </div>
             </div>
 
-            {/* Event Types */}
             <div className="card-theatrical p-6">
               <h4 className="font-display text-sm font-semibold uppercase tracking-wider text-primary mb-4">
                 Available For
@@ -135,7 +132,6 @@ const ContactSection = () => {
             </div>
           </motion.div>
 
-          {/* RIGHT SIDE - FORM */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -167,20 +163,14 @@ const ContactSection = () => {
               </motion.div>
             ) : (
               <motion.form
-                name="contact"
-                method="POST"
-                data-netlify="true"
                 onSubmit={handleSubmit}
                 className="card-theatrical p-8 space-y-5"
               >
-                <input type="hidden" name="form-name" value="contact" />
-
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div>
                     <label className="text-xs text-muted-foreground uppercase tracking-wider mb-2 block">Your Name</label>
                     <input
                       type="text"
-                      name="name"
                       placeholder="John Smith"
                       required
                       value={formData.name}
@@ -192,7 +182,6 @@ const ContactSection = () => {
                     <label className="text-xs text-muted-foreground uppercase tracking-wider mb-2 block">Email Address</label>
                     <input
                       type="email"
-                      name="email"
                       placeholder="john@example.com"
                       required
                       value={formData.email}
@@ -206,7 +195,6 @@ const ContactSection = () => {
                   <label className="text-xs text-muted-foreground uppercase tracking-wider mb-2 block">Event Type</label>
                   <input
                     type="text"
-                    name="subject"
                     placeholder="e.g. Corporate Event, Birthday Party, Comedy Club"
                     required
                     value={formData.subject}
@@ -218,7 +206,6 @@ const ContactSection = () => {
                 <div>
                   <label className="text-xs text-muted-foreground uppercase tracking-wider mb-2 block">Tell Us About Your Event</label>
                   <textarea
-                    name="message"
                     placeholder="Date, location, expected audience size, budget range..."
                     rows={5}
                     required
