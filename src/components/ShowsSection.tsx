@@ -20,56 +20,40 @@ const ShowsSection = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchShows = async () => {
+    const loadShows = async () => {
       try {
-        const res = await fetch(
-          `https://www.googleapis.com/calendar/v3/calendars/austriaalvinnoel%40gmail.com/events?key=AIzaSyAtcsM53mC29a_R5IUlAktq-Tg_GwusClI&singleEvents=true&orderBy=startTime&timeMin=${new Date().toISOString()}`
+        const modules = import.meta.glob("../content/shows/*.json");
+        const entries = Object.entries(modules);
+        if (entries.length === 0) throw new Error("no shows");
+        const loaded = await Promise.all(
+          entries.map(async ([, mod], index) => {
+            const data = (await mod()) as any;
+            const show = data.default;
+            const dateObj = new Date(show.date);
+            return {
+              id: String(index + 1),
+              venue: show.title || "Untitled Show",
+              city: show.city || "Location TBA",
+              date: dateObj.toLocaleDateString(),
+              time: dateObj.toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+              }),
+              status: show.status || "available",
+              ticket: show.ticket_url || "#",
+            };
+          })
         );
-
-        const data = await res.json();
-
-        console.log("FULL RESPONSE:", data); // 🔥 DEBUG
-        console.log("EVENTS:", data.items); // 🔥 DEBUG
-
-        const formatted = (data.items || []).map((event: any) => {
-          const dateObj = new Date(
-            event.start?.dateTime || event.start?.date
-          );
-
-          const desc = (event.description || "").toLowerCase();
-
-          let status = "available";
-          if (desc.includes("soldout")) status = "soldout";
-          else if (desc.includes("limited")) status = "limited";
-
-          const ticketMatch = desc.match(/ticket:(.*)/i);
-          const ticket = ticketMatch ? ticketMatch[1].trim() : "#";
-
-          return {
-            id: event.id,
-            venue: event.summary || "Untitled Show",
-            city: event.location || "Location TBA",
-            date: dateObj.toLocaleDateString(),
-            time: dateObj.toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            }),
-            status,
-            ticket,
-          };
-        });
-
-        console.log("FORMATTED:", formatted); // 🔥 DEBUG
-
-        setShows(formatted);
-      } catch (error) {
-        console.error("Error fetching events:", error);
+        const upcoming = loaded.filter(s => new Date(s.date) >= new Date());
+        setShows(upcoming.length > 0 ? upcoming : loaded);
+      } catch (e) {
+        console.error("Failed to load shows:", e);
+        setShows([]);
       } finally {
         setLoading(false);
       }
     };
-
-    fetchShows();
+    loadShows();
   }, []);
 
   const getStatusBadge = (status: string) => {
@@ -116,21 +100,16 @@ const ShowsSection = () => {
           </p>
         </motion.div>
 
-        {/* 🔄 LOADING STATE */}
         {loading && (
-          <p className="text-center text-muted-foreground">
-            Loading shows...
-          </p>
+          <p className="text-center text-muted-foreground">Loading shows...</p>
         )}
 
-        {/* ❌ NO EVENTS */}
         {!loading && shows.length === 0 && (
           <p className="text-center text-muted-foreground">
             No upcoming shows yet.
           </p>
         )}
 
-        {/* ✅ SHOW EVENTS */}
         <div className="space-y-4 max-w-4xl mx-auto">
           {shows.map((show, index) => (
             <motion.div
@@ -162,16 +141,14 @@ const ShowsSection = () => {
 
               <div className="flex items-center gap-4">
                 {getStatusBadge(show.status)}
-
                 {show.status !== "soldout" ? (
-                  <a
-                    href={show.ticket}
-                    target="_blank"
+                  <button
+                    onClick={() => window.open(show.ticket, "_blank")}
                     className="btn-outline-gold text-sm py-2 px-4 rounded group-hover:bg-primary group-hover:text-primary-foreground"
                   >
                     Get Tickets
                     <ArrowRight size={14} className="inline ml-2" />
-                  </a>
+                  </button>
                 ) : (
                   <button
                     disabled
